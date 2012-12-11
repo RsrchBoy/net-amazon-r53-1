@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CreateHostedZoneRequest xmlns="https://route53.amazonaws.com/doc/2012-02-29/">
+  <Name>[% name | html %]</Name>
+  <CallerReference>[% caller_reference | html %]</CallerReference>
+  <HostedZoneConfig>
+    <Comment>[% comment | html %]</Comment>
+  </HostedZoneConfig>
+</CreateHostedZoneRequest>

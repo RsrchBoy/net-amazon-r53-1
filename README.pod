@@ -1,0 +1,179 @@
+=pod
+
+=encoding utf-8
+
+=for :stopwords Chris Weyl AWS DNS
+
+=head1 NAME
+
+Net::Amazon::R53 - An interface to Amazon's Route53
+
+=head1 VERSION
+
+This document describes version 0.001 of Net::Amazon::R53 - released October 31, 2012 as part of Net-Amazon-R53.
+
+=head1 SYNOPSIS
+
+    use Net::Amazon::R53;
+
+    my $r53 = Net::Amazon::R53->new(id => $aws_id, key => $aws_key);
+
+    $r53
+        ->get_hosted_zone('Z1345....')
+        ->purge
+        ->delete
+        ;
+
+    # ...etc.
+
+=head1 DESCRIPTION
+
+This is an interface to Amazon's Route53 DNS service.  It aims to be simple,
+reliable, well tested, easily extensible, and capable of rescuing kittens from
+volcanoes.
+
+Well, maybe not that last part.
+
+=head1 REQUIRED ATTRIBUTES
+
+=head2 id
+
+Your AWS id.
+
+=head2 key
+
+...and the corresponding AWS secret key.
+
+=head1 LAZY ATTRIBUTES
+
+=head2 signer
+
+The logic that authenticates your requests to Route53.
+
+=head1 ATTRIBUTES
+
+=head2 hosted_zones_hash
+
+Contains a list of all C<HostedZones> associated with this AWS key/id; lazily
+built.  Right now we fetch at most 100 records.
+
+=head2 template_dir
+
+The directory we expect to find our templates in.
+
+=head1 METHODS
+
+=head2 signed_headers
+
+Returns a list of headers (key/value pairs) suitable for direct inclusion in
+the headers of a Route53 request.
+
+=head2 hosted_zone_ids
+
+Returns all of the hosted zone ids we know about.
+
+=head2 hosted_zones
+
+Returns a list of all known hosted zones.
+
+=head2 has_fetched_hosted_zones
+
+True if the C<hosted_zones> attribute is currently populated (that is, we've
+fetched some at some point from Amazon.
+
+=head2 clear_hosted_zones
+
+Deletes our cached set of hosted zones, if we have any.
+
+=head2 has_hosted_zones
+
+True if we currently have any hosted zones.
+
+=head2 get_resource_record_sets(<hosted zone id>)
+
+Given a hosted zone id, we fetch all its associated resource record sets.
+
+=head2 create_hosted_zone(name => ..., caller_reference => ..., comment => ...)
+
+Creates a hosted zone.
+
+Dies on error.
+
+Returns the new hosted zone object if called in scalar context; the change
+and hosted zone objects if called in list context; that is:
+
+    my ($hz, $change) = $r53->create_hosted_zone(...);
+    my $hz            = $r53->create_hosted_zone(...);
+
+=head2 delete_hosted_zone($hz_id)
+
+Delete a hosted zone, by its id; both the plain id (e.g. C<ZIQB30DSWGWG6>)
+or the full one Amazon returns (e.g. C</hostedzone/ZIQB30DSWGWG6>) are
+acceptable ids.
+
+We do not perform any validation.  If the zone doesn't exist, or is not
+pristine (contains any non-Amazon record sets), or anything else goes
+sideways, we'll just die.
+
+=head2 request($method, $uri_part, $content)
+
+Make a request to Route53.
+
+=head2 get_request
+
+Same as request(), but as a GET.
+
+=head2 post_request
+
+Same as request(), but as a POST.
+
+=head2 delete_request
+
+Same as request(), but as a DELETE.
+
+=head1 SEE ALSO
+
+Please see those modules/websites for more information related to this module.
+
+=over 4
+
+=item *
+
+L<Amazon's docs and Route53 information, particularly:|Amazon's docs and Route53 information, particularly:>
+
+=item *
+
+L<http://docs.amazonwebservices.com/Route53/latest/DeveloperGuide/Welcome.html|http://docs.amazonwebservices.com/Route53/latest/DeveloperGuide/Welcome.html>
+
+=item *
+
+L<L<Net::Amazon::Route53> is a prior implementation of an older Route53 API.|L<Net::Amazon::Route53> is a prior implementation of an older Route53 API.>
+
+=back
+
+=head1 SOURCE
+
+The development version is on github at L<http://github.com/RsrchBoy/net-amazon-r53>
+and may be cloned from L<git://github.com/RsrchBoy/net-amazon-r53.git>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on the bugtracker website
+https://github.com/RsrchBoy/net-amazon-r53/issues
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
+
+=head1 AUTHOR
+
+Chris Weyl <cweyl@alumni.drew.edu>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2012 by Chris Weyl.
+
+This is free software, licensed under:
+
+  The GNU Lesser General Public License, Version 2.1, February 1999
+

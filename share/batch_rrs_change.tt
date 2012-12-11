@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChangeResourceRecordSetsRequest xmlns="https://route53.amazonaws.com/doc/2012-02-29/">
+  <ChangeBatch>
+    <Comment>[% comment | html %]</Comment>
+    <Changes>
+[% FOREACH change = changes -%]
+[% record = change.record -%]
+      <Change>
+        <Action>[% change.action %]</Action>
+        <ResourceRecordSet>
+          <Name>[% record.name %]</Name>
+          <Type>[% record.type %]</Type>
+[% IF record.has_ttl -%]
+          <TTL>[% record.ttl %]</TTL>
+[% END; IF record.has_weight -%]
+          <Weight>[% record.weight %]</Weight>
+[% END; IF record.has_set_identifier =%]
+          <SetIdentifier>[% record.set_identifier | html %]</SetIdentifier>
+[% END; IF record.has_alias_target -%]
+          <AliasTarget>
+              <HostedZoneId>[% record.alias_target.HostedZoneId %]</HostedZoneId>
+              <DNSName>[% record.alias_target.DNSName %]</DNSName>
+          </AliasTarget>
+[% END; IF record.has_region -%]
+          <Region>[% record.region %]</Region>
+[% END -%]
+          <ResourceRecords>
+[% FOREACH rr = record.resource_records -%]
+            <ResourceRecord>
+              <Value>[% rr | html %]</Value>
+            </ResourceRecord>
+[% END -%]
+          </ResourceRecords>
+        </ResourceRecordSet>
+      </Change>
+[% END -%]
+    </Changes>
+  </ChangeBatch>
+</ChangeResourceRecordSetsRequest>
