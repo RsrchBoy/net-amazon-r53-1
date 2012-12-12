@@ -10,6 +10,7 @@ use namespace::autoclean;
 use autobox::Core;
 use MooseX::AlwaysCoerce;
 use MooseX::AttributeShortcuts;
+use MooseX::MultiInitArg;
 use MooseX::Params::Validate;
 use MooseX::Types::Common::String ':all';
 use MooseX::Types::Path::Class ':all';
@@ -23,6 +24,7 @@ use Template;
 use XML::Simple;
 
 use aliased 'Net::Amazon::Signature::V3';
+use aliased 'MooseX::MultiInitArg::Trait' => 'MultiInitArg';
 
 # debugging...
 #use Smart::Comments '###';
@@ -38,18 +40,53 @@ with 'MooseX::RelatedClasses' => {
     } ],
 };
 
-=reqatt id
+=reqatt aws_access_key_id
 
-Your AWS id.
+Your AWS id.  You may also specify this at instance construction time using
+the alternate name of "id".
 
-=reqatt key
+=method aws_access_key_id()
 
-...and the corresponding AWS secret key.
+The AWS access id this instance uses.
+
+=method id()
+
+Synonym of C<aws_access_key_id()>.
+
+=reqatt aws_secret_access_key
+
+...and the corresponding AWS secret key.  You may also specify this at
+instance construction time using the alternate name of "key".
+
+=method aws_secret_access_key()
+
+The AWS access secret this instance uses.
+
+=method key()
+
+Synonym of C<aws_secret_access_key()>.
 
 =cut
 
-has $_ => (is => 'ro', required => 1, isa => NonEmptySimpleStr)
-    for qw{ id key };
+has aws_access_key_id => (
+    traits    => [ MultiInitArg ],
+    is        => 'ro',
+    isa       => NonEmptySimpleStr,
+    init_args => [ 'id' ],
+    required  => 1,
+);
+
+sub id { shift->aws_access_key_id }
+
+has aws_secret_access_key => (
+    traits    => [ MultiInitArg ],
+    is        => 'ro',
+    isa       => NonEmptySimpleStr,
+    init_args => [ 'key' ],
+    required  => 1,
+);
+
+sub key { shift->aws_secret_access_key }
 
 =lazyatt signer
 
@@ -175,7 +212,7 @@ nothing if no such zone is found.
 sub hosted_zone_by_caller_reference {
     my ($self, $caller_ref) = @_;
 
-    # implementation note: caller references are guaranteed unique by Amazon,
+    # Implementation note: caller references are guaranteed unique by Amazon,
     # so using first() here isn't going to have any weird side-effects.
 
     ### searching for: $caller_ref
