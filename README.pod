@@ -2,7 +2,7 @@
 
 =encoding utf-8
 
-=for :stopwords Chris Weyl AWS DNS
+=for :stopwords Chris Weyl Campus Explorer, Inc AWS DNS
 
 =head1 NAME
 
@@ -10,7 +10,7 @@ Net::Amazon::R53 - An interface to Amazon's Route53
 
 =head1 VERSION
 
-This document describes version 0.001 of Net::Amazon::R53 - released October 31, 2012 as part of Net-Amazon-R53.
+This document describes version 0.001 of Net::Amazon::R53 - released December 21, 2012 as part of Net-Amazon-R53.
 
 =head1 SYNOPSIS
 
@@ -36,6 +36,8 @@ Well, maybe not that last part.
 
 =head1 REQUIRED ATTRIBUTES
 
+These attributes are required, and must have their values supplied during object construction.
+
 =head2 id
 
 Your AWS id.
@@ -45,6 +47,8 @@ Your AWS id.
 ...and the corresponding AWS secret key.
 
 =head1 LAZY ATTRIBUTES
+
+These attributes are lazily constructed from another source (e.g. required attributes, external source, some combo of the two). You can, but are generally recommended to not, set these values at construction time.
 
 =head2 signer
 
@@ -68,14 +72,6 @@ The directory we expect to find our templates in.
 Returns a list of headers (key/value pairs) suitable for direct inclusion in
 the headers of a Route53 request.
 
-=head2 hosted_zone_ids
-
-Returns all of the hosted zone ids we know about.
-
-=head2 hosted_zones
-
-Returns a list of all known hosted zones.
-
 =head2 has_fetched_hosted_zones
 
 True if the C<hosted_zones> attribute is currently populated (that is, we've
@@ -89,6 +85,33 @@ Deletes our cached set of hosted zones, if we have any.
 
 True if we currently have any hosted zones.
 
+=head2 has_hosted_zone($plain_id)
+
+True if we have a zone with a plain id as passed to us.
+
+=head2 hosted_zone_ids
+
+Returns all of the hosted zone ids we know about.
+
+=head2 hosted_zones
+
+Returns a list of all known hosted zones; that is, a list of
+L<Net::Amazon::R53::HostedZone> instances.
+
+=head2 hosted_zones_count
+
+Returns the number of hosted zones Route53 thinks we have.
+=method hosted_zone_by_id($id)
+
+Looks for a hosted zone with the passed value as its id.  Note that we're
+talking about the so-called "plain" id, not the fully qualified one (e.g.
+'Z12345', not '/hostedzone/Z12345').
+
+=head2 hosted_zone_by_caller_reference($caller_reference)
+
+Looks for a zone with the passed string as its caller reference.  Returns
+nothing if no such zone is found.
+
 =head2 get_resource_record_sets(<hosted zone id>)
 
 Given a hosted zone id, we fetch all its associated resource record sets.
@@ -97,13 +120,30 @@ Given a hosted zone id, we fetch all its associated resource record sets.
 
 Creates a hosted zone.
 
-Dies on error.
+C<name> is the domain name this zone holds records for, e.g. 'test.com.'.
+
+C<caller_reference> is some unique client-chosen (aka you) identifier.
+
+C<comment> is, well, the comment used for zone creation.
+
+Only the C<name> parameter is mandatory; suitable values will be generated for
+the other options if they are omitted.
 
 Returns the new hosted zone object if called in scalar context; the change
 and hosted zone objects if called in list context; that is:
 
     my ($hz, $change) = $r53->create_hosted_zone(...);
     my $hz            = $r53->create_hosted_zone(...);
+
+Dies on error.  For more information, see the Route53 API and Developer's
+Guide.
+
+=head2 copy_hosted_zone($hz)
+
+Given a hosted zone object, create a new hosted zone and copy the contents of
+the given zone to the new zone.
+
+Returns the new hosted zone instance.
 
 =head2 delete_hosted_zone($hz_id)
 
@@ -151,27 +191,13 @@ L<L<Net::Amazon::Route53> is a prior implementation of an older Route53 API.|L<N
 
 =back
 
-=head1 SOURCE
-
-The development version is on github at L<http://github.com/RsrchBoy/net-amazon-r53>
-and may be cloned from L<git://github.com/RsrchBoy/net-amazon-r53.git>
-
-=head1 BUGS
-
-Please report any bugs or feature requests on the bugtracker website
-https://github.com/RsrchBoy/net-amazon-r53/issues
-
-When submitting a bug or request, please include a test-file or a
-patch to an existing test-file that illustrates the bug or desired
-feature.
-
 =head1 AUTHOR
 
 Chris Weyl <cweyl@alumni.drew.edu>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2012 by Chris Weyl.
+This software is Copyright (c) 2012 by Campus Explorer, Inc.
 
 This is free software, licensed under:
 
