@@ -10,7 +10,7 @@ Net::Amazon::R53 - An interface to Amazon's Route53
 
 =head1 VERSION
 
-This document describes version 0.001 of Net::Amazon::R53 - released December 21, 2012 as part of Net-Amazon-R53.
+This document describes version 0.001 of Net::Amazon::R53 - released December 26, 2012 as part of Net-Amazon-R53.
 
 =head1 SYNOPSIS
 
@@ -48,7 +48,7 @@ Your AWS id.
 
 =head1 LAZY ATTRIBUTES
 
-These attributes are lazily constructed from another source (e.g. required attributes, external source, some combo of the two). You can, but are generally recommended to not, set these values at construction time.
+These attributes are lazily constructed from another source (e.g. required attributes, external source, a BUILD() method, or some combo thereof). You can set these values at construction time, though this is generally neither required nor recommended.
 
 =head2 signer
 
