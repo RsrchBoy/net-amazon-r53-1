@@ -41,11 +41,21 @@ supplied name if not present.  This behaviour may change.
 
 =reqatt type
 
+One of the R53 supported types:
+
+    A AAAA CNAME MX NS PTR SOA SPF SRV TXT
+
 =attr ttl
 
 =attr resource_records
 
-=lazyatt r53_rrs_type
+=attr alias_target
+
+=attr set_identifier
+
+=attr weight
+
+=attr region
 
 =cut
 
@@ -113,7 +123,6 @@ sub new_from_net_dns_rr {
         #origin => { isa => NonEmptySimpleStr,         default => '.' },
         opts   => { isa => 'HashRef',                 default => { } },
         ;
-
 
     # this is made significantly easier in that if we're using a Net::DNS::RR
     # to create a stub, there will be no Route53-specific functionality
@@ -193,3 +202,19 @@ __PACKAGE__->meta->make_immutable;
 __END__
 
 =for stopwords ttl
+
+=head1 DESCRIPTION
+
+This class represents a R53 resource record set, "in the raw", as it were; a
+record without an owning zone.  Stubs are useful both when specifing what a
+R53 entry should look like, as well as for operations that just need the info,
+and don't care if it's actually in an R53 hosted zone.
+
+=head1 OVERVIEW
+
+See the Amazon R53 API doc for legal values and uses, at the moment.
+
+Note that we do basic validation here, and allow R53 itself to tell us when
+values are off.
+
+=cut
