@@ -339,7 +339,8 @@ sub copy_hosted_zone {
         comment        => $comment,
         multi_batch_ok => 1,
         changes        => [
-            map { { action => 'CREATE', record => $_ } }
+            map  { { action => 'CREATE', record => $_ } }
+            grep { $_->type !~ /^(NS|SOA)$/             }
             $hz->resource_record_sets->flatten
         ],
     );
