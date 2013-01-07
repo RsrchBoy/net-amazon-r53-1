@@ -9,7 +9,7 @@ use Moose;
 use namespace::autoclean;
 use autobox::Core;
 use MooseX::AlwaysCoerce;
-use MooseX::AttributeShortcuts;
+use MooseX::AttributeShortcuts 0.017;
 use MooseX::Params::Validate;
 use MooseX::Types::Common::String ':all';
 use MooseX::Types::Path::Class ':all';
