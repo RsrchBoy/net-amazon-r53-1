@@ -27,10 +27,10 @@ This is the set of the "from" resource records.
 
 Legal values:
 
+=for :list
 * An ArrayRef of L<Stubs|Net::Amazon::R53::ResourceRecordSet::Stub>.
-
-* L<HostedZone|Net::Amazon::R53::HostedZone> (coerced via
-L<Net::Amazon::R53::HostedZone/resource_record_sets>).
+* L<HostedZone|Net::Amazon::R53::HostedZone>
+This can be coerced from a L<HostedZone|Net::Amazon::R53::HostedZone> using L<Net::Amazon::R53::HostedZone/resource_record_sets>.
 
 =reqatt omega
 
