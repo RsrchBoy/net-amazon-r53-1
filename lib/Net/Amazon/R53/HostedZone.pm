@@ -55,6 +55,7 @@ from the raw count returned from Route53 in a hosted zone query.
 =cut
 
 has caller_reference => (is => 'ro', isa => NonEmptySimpleStr, required => 1);
+has comment          => (is => 'ro', isa => 'Str');
 has config           => (is => 'ro', isa => 'ArrayRef',        builder  => sub { [ ] });
 has id               => (is => 'ro', isa => NonEmptySimpleStr, required => 1);
 has name             => (is => 'ro', isa => NonEmptySimpleStr, required => 1);
