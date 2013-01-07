@@ -302,7 +302,7 @@ sub create_hosted_zone {
     my $hz     = $self->hosted_zone_class->new_from_raw_data($self, $info->{HostedZone});
     # TODO delegtion info
 
-    $self->_add_hosted_zone($hz)
+    $self->_add_hosted_zone($hz->plain_id => $hz)
         if $self->has_fetched_hosted_zones;
 
     return wantarray ? ($hz, $change) : $hz;
