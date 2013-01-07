@@ -347,7 +347,7 @@ sub copy_hosted_zone {
     return $new_hz;
 }
 
-=method delete_hosted_zone($hz_id)
+=method delete_hosted_zone($hz_id | $hz)
 
 Delete a hosted zone, by its id; both the plain id (e.g. C<ZIQB30DSWGWG6>)
 or the full one Amazon returns (e.g. C</hostedzone/ZIQB30DSWGWG6>) are
@@ -360,13 +360,18 @@ sideways, we'll just die.
 =cut
 
 sub delete_hosted_zone {
-    my ($self, $hz_id) = @_;
+    my ($self, $hz_thing) = @_;
 
-    my $path = $hz_id =~ m!^/hostedzone/! ? $hz_id : "/hostedzone/$hz_id";
+    my $path
+        = blessed $hz_thing             ? $hz_thing->id
+        : $hz_thing =~ m!^/hostedzone/! ? $hz_thing
+        :                                 "/hostedzone/$hz_thing"
+        ;
+
     my $resp = $self->delete_request($path, undef);
 
     # OK if we make it here w/o dying
-    $self->_delete_hosted_zone($hz_id)
+    $self->_delete_hosted_zone($path->split(qr!/!)->pop)
         if $self->has_fetched_hosted_zones;
 
     # so here we do something a little different.  We use the ChangeInfo data
