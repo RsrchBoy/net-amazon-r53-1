@@ -18,7 +18,7 @@ use Data::UUID;
 use File::ShareDir::ProjectDistDir;
 use HTTP::Request;
 use List::AllUtils 'first';
-use LWP::UserAgent;
+use LWP::UserAgent::Determined;
 use Template;
 use XML::Simple;
 
@@ -70,8 +70,8 @@ has signer => (
 
 has ua => (
     is      => 'lazy',
-    isa     => 'LWP::UserAgent',
-    builder => sub { LWP::UserAgent->new },
+    isa     => 'LWP::UserAgent::Determined',
+    builder => sub { LWP::UserAgent::Determined->new },
 );
 
 has endpoint_base => (
