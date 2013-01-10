@@ -10,7 +10,7 @@ Net::Amazon::R53 - An interface to Amazon's Route53
 
 =head1 VERSION
 
-This document describes version 0.001 of Net::Amazon::R53 - released December 26, 2012 as part of Net-Amazon-R53.
+This document describes version 0.002 of Net::Amazon::R53 - released January 09, 2013 as part of Net-Amazon-R53.
 
 =head1 SYNOPSIS
 
@@ -145,7 +145,7 @@ the given zone to the new zone.
 
 Returns the new hosted zone instance.
 
-=head2 delete_hosted_zone($hz_id)
+=head2 delete_hosted_zone($hz_id | $hz)
 
 Delete a hosted zone, by its id; both the plain id (e.g. C<ZIQB30DSWGWG6>)
 or the full one Amazon returns (e.g. C</hostedzone/ZIQB30DSWGWG6>) are
@@ -192,6 +192,10 @@ L<L<Net::Amazon::Route53> is a prior implementation of an older Route53 API.|L<N
 =back
 
 =head1 AUTHOR
+
+Chris Weyl <cweyl@campusexplorer.com>
+
+=head1 CONTRIBUTOR
 
 Chris Weyl <cweyl@alumni.drew.edu>
 
